@@ -2,7 +2,9 @@ services:
   - type: web
     name: healthlens-server
     runtime: docker
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: Dockerfile
+    buildDir: .
     envVars:
       - key: OPENAI_API_KEY
         sync: false
+    healthCheckPath: /system/healthz
