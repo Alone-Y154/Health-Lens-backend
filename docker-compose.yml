@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  healthlens-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: healthlens-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      # Persist uploaded files (optional - comment out to lose files on container restart)
+      - ./tmp_uploads:/app/tmp_uploads
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/system/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    networks:
+      - healthlens-network
+
+networks:
+  healthlens-network:
+    driver: bridge
